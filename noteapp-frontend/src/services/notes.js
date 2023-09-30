@@ -1,35 +1,35 @@
 import axios from 'axios'
+import session from './login'
 const baseUrl = '/api/notes'
 
-let token = null
-
-const headers = () => {
+const headerConfig = () => {
+  const user = session.getUser()
   return {
     headers: {
-      Authorization: token
-    } 
+      Authorization: `Bearer ${user.token}`
+    }
   }
 }
 
-const setToken = newToken => {
-  token = `Bearer ${newToken}`
-}
-
 const getAll = () => {
-  const request = axios.get(baseUrl, headers())
-  return request.then(response => response.data)
+  return axios.get(baseUrl, headerConfig())
 }
 
-const create = newObject => {
-  const request = axios.post(baseUrl, newObject, headers())
-  return request.then(response => response.data)
+const create = (note) => {
+  return axios.post(baseUrl, note, headerConfig())
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject, headers())
-  return request.then(response => response.data)
+const update = (note) => {
+  return axios.put(`${baseUrl}/${note.id}`, note, headerConfig())
 }
 
-export default { 
-  getAll, create, update, setToken
+const remove = (note) => {
+  return axios.delete(`${baseUrl}/${note.id}`, headerConfig())
+}
+
+export default {
+  getAll,
+  create,
+  update,
+  remove,
 }

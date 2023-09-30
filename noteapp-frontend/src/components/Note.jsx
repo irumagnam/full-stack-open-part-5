@@ -1,12 +1,24 @@
-const Note = ({ note, toggleImportance }) => {
-  const label = note.important
-    ? 'make not important' : 'make important'
+const Note = ({ note, callBackOnUpdate, callBackOnDelete }) => {
+  const toggleImportance = () => {
+    callBackOnUpdate({
+      ...note,
+      important: !note.important
+    })
+  }
 
   return (
-    <li className='note'>
-      {note.content} 
-      <button onClick={toggleImportance}>{label}</button>
-    </li>
+    <div className="row note">
+      <div className="cell">{note.content}</div>
+      <div className="cell">
+        <button onClick={toggleImportance}>
+          {note.important
+            ? 'make not important'
+            : 'make important'
+          }
+        </button>
+        <button onClick={() => callBackOnDelete(note)}>delete</button>
+      </div>
+    </div>
   )
 }
 
